@@ -24,7 +24,7 @@ PUNCTUATIONS = ["''", "'", "``", "`", "-LRB-", "-RRB-", "-LCB-", "-RCB-", \
         ".", "?", "!", ",", ":", "-", "--", "...", ";"] 
 
 class PTBTokenizer:
-    """Python wrapper of Stanford PTBTokenizer"""
+
     def __init__(self, _source='gts'):
         self.source = _source
 
@@ -33,12 +33,8 @@ class PTBTokenizer:
                 'edu.stanford.nlp.process.PTBTokenizer', \
                 '-preserveLines', '-lowerCase']
 
-        # ======================================================
-        # prepare data for PTB Tokenizer
-        # ======================================================
 
-
-        sentences = None #init
+        sentences = None 
         if self.source == 'gts':
             image_id = [k for k, v in captions_for_image.items() for _ in range(len(v))]
             sentences = '\n'.join([c['caption'].replace('\n', ' ') for k, v in captions_for_image.items() for c in v])
@@ -51,38 +47,26 @@ class PTBTokenizer:
             sentences = '\n'.join(v["caption"].replace('\n', ' ') for v in captions_for_image )
             final_tokenized_captions_for_index = []
 
-        # ======================================================
-        # save sentences to temporary file
-        # ======================================================
         path_to_jar_dirname=os.path.dirname(os.path.abspath(__file__))
 
         tmp_file = tempfile.NamedTemporaryFile(delete=False, dir=path_to_jar_dirname, mode='w', encoding='utf-8')
 
-        print(sentences)
         tmp_file.write(sentences)
         tmp_file.close()
 
-        # ======================================================
-        # tokenize sentence
-        # ======================================================
 
         cmd.append(os.path.basename(tmp_file.name))
 
         p_tokenizer = subprocess.Popen(cmd, cwd=path_to_jar_dirname, \
                 stdout=subprocess.PIPE)
 
-        sentences_bytes = sentences.rstrip().encode('utf-8') # added
+        sentences_bytes = sentences.rstrip().encode('utf-8')
 
-        #token_lines = p_tokenizer.communicate(.encode('utf-8')input=sentences.rstrip())[0]
         token_lines = p_tokenizer.communicate(input=sentences_bytes.rstrip())[0]    
         lines = token_lines.split(b'\n')
-        # remove temp file
+
         os.remove(tmp_file.name)
 
-        # ======================================================
-        # create dictionary for tokenized captions
-        # ======================================================
-        print("ss")
         if self.source == 'gts':
             for k, line in zip(image_id, lines):
                 if not k in final_tokenized_captions_for_image:
