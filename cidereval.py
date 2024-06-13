@@ -30,11 +30,12 @@ print("*****************************")
 loadDat = LoadData(pathToData)
 gts, res = loadDat.readJson(refName, candName)
 
-
+print("aa")
 # calculate cider scores
 scorer = ciderEval(gts, res, df_mode)
 # scores: dict of list with key = metric and value = score given to each
 # candidate
+print("dsaf")
 scores = scorer.evaluate()
 
 

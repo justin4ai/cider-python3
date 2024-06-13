@@ -1,7 +1,6 @@
 __author__ = 'rama'
 from pyciderevalcap.tokenizer.ptbtokenizer import PTBTokenizer
 from pyciderevalcap.cider.cider import Cider
-from pyciderevalcap.ciderD.ciderD import CiderD
 
 
 class CIDErEvalCap:
@@ -24,17 +23,25 @@ class CIDErEvalCap:
         # =================================================
 
         print('setting up scorers...')
-        scorers = [
-            (Cider(df=self.df), "CIDEr"), (CiderD(df=self.df), "CIDErD")
-        ]
+        # scorers = [
+        #     (Cider(df=self.df), "CIDEr"), (CiderD(df=self.df), "CIDErD")
+        # ]
+        method = "CIDEr"
+        scorer = Cider(df=self.df)
 
         # =================================================
         # Compute scores
         # =================================================
         metric_scores = {}
-        for scorer, method in scorers:
-            print('computing %s score...' % (scorer.method()))
-            score, scores = scorer.compute_score(self.gts, self.res)
-            print("Mean %s score: %0.3f" % (method, score))
-            metric_scores[method] = list(scores)
+        # for scorer, method in scorers:
+        #     print('computing %s score...' % (scorer.method()))
+        #     score, scores = scorer.compute_score(self.gts, self.res)
+        #     print("Mean %s score: %0.3f" % (method, score))
+        #     metric_scores[method] = list(scores)
+
+
+        print('computing %s score...' % (scorer.method()))
+        score, scores = scorer.compute_score(self.gts, self.res)
+        print("Mean %s score: %0.3f" % (method, score))
+        metric_scores[method] = list(scores)
         return metric_scores
