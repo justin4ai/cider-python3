@@ -1,0 +1,7 @@
+{
+	"pathToData": "data/",
+	"refName": "result_gt_transformer.json",
+	"candName": "result_ref_transformer.json",
+	"resultFile": "results.json",
+	"idf": "coco-val-df"
+}
